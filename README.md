@@ -38,9 +38,6 @@ and if you want an explanation of the code, scroll down below.
 ![image](https://github.com/user-attachments/assets/b1c9efa8-7538-4a84-a34a-dea56acdb5bf)
 
 
-I couldn't find out why the result was little bit diffent. 
-
-Looking closely, the light forms a square. So, I think Gouraud Shading work successful.
 
 ## Code explanation
 
@@ -90,61 +87,60 @@ Only lightPos was hardcoded to fit the coordinate system of my code.
 
 
 ```
-void rasterize_triangle_gouraud(vec4 v0, vec4 v1, vec4 v2, vec3 c0, vec3 c1, vec3 c2)
 
-   ...
+void rasterize_triangle(vec4 v0, vec4 v1, vec4 v2, vec3 n0, vec3 n1, vec3 n2) {
 
-                float area = std::abs((s1.x - s0.x) * (s2.y - s0.y) - (s2.x - s0.x) * (s1.y - s0.y));
-                float w0 = std::abs((s1.x - p.x) * (s2.y - p.y) - (s2.x - p.x) * (s1.y - p.y)) / area;
-                float w1 = std::abs((s2.x - p.x) * (s0.y - p.y) - (s0.x - p.x) * (s2.y - p.y)) / area;
-                float w2 = 1.0f - w0 - w1;
+       ...
 
-                float depth = w0 * p0.z + w1 * p1.z + w2 * p2.z;
-                int idx = y * WIDTH + x;
-               if (depth < DepthBuffer[idx]) {
-                DepthBuffer[idx] = depth;
-                vec3 color = w0 * c0 + w1 * c1 + w2 * c2;
-                OutputImage[3 * idx + 0] = color.r;
-                OutputImage[3 * idx + 1] = color.g;
-                OutputImage[3 * idx + 2] = color.b;
-               }
-   ...
+            if ((a >= 0 && b >= 0 && c >= 0) || (a <= 0 && b <= 0 && c <= 0)) {
+
+                    ...
+                    // Interpolated normal
+                    vec3 normal = normalize(w0 * n0 + w1 * n1 + w2 * n2);
+
+                    // Phong shading color at the pixel
+                    vec3 color = compute_phong_lighting(vec3(p0), normal);                
+                     ...
+        }
+    }
+}
 
 ```
-![image](https://github.com/user-attachments/assets/1790d620-bade-4b7b-bd4b-f293ac391fcd)
+![image](https://github.com/user-attachments/assets/03b16ff6-e208-4aea-b7e0-f769dfaa79d8)
 
 
-Gouraud Shading is implemented using per-vertex normal.
+Phong Shading is implemented using per-fragment normal. Rasterization get normal.
 
-Interpolate the per-vertex normals using the barycentric weights w0, w1, and w2, and use the resulting normal to compute and output the final color.
+Other code is same as Hw6_Q2 Gouraud Shading, and two attribute above was added.
 
 -----------
 ```
 void render_scene() {
    ...
 
-    std::vector<vec3> VertexColors(gVertices.size());
-    for (int i = 0; i < gVertices.size(); ++i) {
-        vec3 pos = vec3(model * vec4(gVertices[i], 1.0f)); 
-        vec3 normal = normalize(mat3(transpose(inverse(model))) * gVertices[i]); 
-        VertexColors[i] = compute_phong_lighting(pos, normal);
-    }
-
+    
     for (int i = 0; i < gIndexBuffer.size(); i += 3) {
-        int ia = gIndexBuffer[i];
-        int ib = gIndexBuffer[i + 1];
-        int ic = gIndexBuffer[i + 2];
+        int i0 = gIndexBuffer[i];
+        int i1 = gIndexBuffer[i + 1];
+        int i2 = gIndexBuffer[i + 2];
 
-        vec4 v0 = MVP * vec4(gVertices[ia], 1.0f);
-        vec4 v1 = MVP * vec4(gVertices[ib], 1.0f);
-        vec4 v2 = MVP * vec4(gVertices[ic], 1.0f);
+        vec3 p0 = gVertices[i0];
+        vec3 p1 = gVertices[i1];
+        vec3 p2 = gVertices[i2];
 
-        rasterize_triangle_gouraud(v0, v1, v2,
-            VertexColors[ia], VertexColors[ib], VertexColors[ic]);
+        vec3 n0 = normalize(p0);  // Sphere: position = normal
+        vec3 n1 = normalize(p1);
+        vec3 n2 = normalize(p2);
+
+        vec4 v0 = MVP * vec4(p0, 1.0f);
+        vec4 v1 = MVP * vec4(p1, 1.0f);
+        vec4 v2 = MVP * vec4(p2, 1.0f);
+
+        rasterize_triangle(v0, v1, v2, n0, n1, n2);
     }
 }
 ```
-![image](https://github.com/user-attachments/assets/4533f093-941d-4b6e-b57a-c417e698039b)
+![image](https://github.com/user-attachments/assets/3736402d-f590-4563-8fd4-590e9d33f592)
 
 Computes the vertex normal.
 
