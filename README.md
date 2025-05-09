@@ -6,9 +6,9 @@ You need Visual Studio 2022 and window 11 OS.
 And C/C++ should be available in VS2022.
 
 ## About
-This project is about Gouraud Shading.
+This project is about Phong Shading.
 
-To view the result image, open Q2_result.png, 
+To view the result image, open Q3_result.png, 
 
 and if you want an explanation of the code, scroll down below.
 
