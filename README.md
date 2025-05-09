@@ -22,19 +22,21 @@ and if you want an explanation of the code, scroll down below.
 
 2. Unzip a download file
 
-![image](https://github.com/user-attachments/assets/cce0d53a-fb98-4cd3-8acc-bd15898e987b)
+![image](https://github.com/user-attachments/assets/0abd2e1f-fbc0-4bbe-9e34-6639cf18e3cd)
 
 
 
-3. Open hw2_Q1-master. Double click hw2_Q1-master and opne OpenglViewer.sln
+3. Open cg_hw6_Q3-master. Double click cg_hw6_Q3-master and opne OpenglViewer.sln
 
-![image](https://github.com/user-attachments/assets/9466e7d8-84e5-4852-9403-da308e22baf5)
+![image](https://github.com/user-attachments/assets/8fb753d6-e097-4155-a83e-b58d85e332a1)
+
 
 
 
 4. click "F5" on your keybord. Then you will get the result.
 
-![image](https://github.com/user-attachments/assets/9cd21ee6-6d94-4880-9709-f9271e5b725c)
+![image](https://github.com/user-attachments/assets/b1c9efa8-7538-4a84-a34a-dea56acdb5bf)
+
 
 I couldn't find out why the result was little bit diffent. 
 
